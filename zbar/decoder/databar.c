@@ -23,6 +23,8 @@
 
 #include "config.h"
 #include <zbar.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #ifdef DEBUG_DATABAR
 #define DEBUG_LEVEL (DEBUG_DATABAR)
@@ -641,6 +643,14 @@ static inline unsigned lookup_sequence(databar_segment_t *seg, int fixed,
     i = (i * i) / 4;
     dbprintf(2, " {%d,%d:", i, n);
     p = exp_sequences + i;
+
+    if (n >= 21) {
+	// The loop below checks i<n and increments i by one within the loop
+	// when accessing seq[22]. For this to be safe, n needs to be < 21.
+	// See CVE-2023-40890.
+	fprintf(stderr, "Bug: Out-of-bounds condition detected\n");
+	abort();
+    }
 
     fixed >>= 1;
     seq[0] = 0;
