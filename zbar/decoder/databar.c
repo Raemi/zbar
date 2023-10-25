@@ -649,7 +649,7 @@ static inline unsigned lookup_sequence(databar_segment_t *seg, int fixed,
 	// when accessing seq[22]. For this to be safe, n needs to be < 21.
 	// See CVE-2023-40890.
 	fprintf(stderr, "Bug: Out-of-bounds condition detected\n");
-	abort();
+	exit(99);
     }
 
     fixed >>= 1;
